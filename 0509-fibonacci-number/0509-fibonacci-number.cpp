@@ -1,17 +1,15 @@
 class Solution {
 private:
     long long dp[31];
-
-    long long _calcFib(int n) {
-        if (n <= 1) return n;
-        if (dp[n] != -1) return dp[n];
-        dp[n] = (long long) _calcFib(n - 1) + _calcFib(n - 2);
-        return dp[n];
-    }
-
 public:
     int fib(int n) {
         fill(dp, dp + 31, -1);
-        return _calcFib(n);
+
+        dp[0] = 0, dp[1] = 1;
+        for (int i = 2; i <= n; ++i) {
+            dp[i] = dp[i - 1] + dp[i - 2];
+        }
+
+        return dp[n];
     }
 };
