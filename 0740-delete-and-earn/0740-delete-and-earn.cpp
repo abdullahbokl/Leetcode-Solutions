@@ -1,17 +1,20 @@
 class Solution {
 private:
-    int arr[20004];
 public:
     int deleteAndEarn(vector<int> &nums) {
-        fill(arr, arr + 20004, 0);
+    const int sz = 10001;
+        int arr[sz] = {0};
+
         for (int &num: nums) arr[num] += num;
 
-        arr[1] = max(arr[0], arr[1]);
+        int prev1 = 0, prev2 = 0, maxVal;
 
-        for (int i = 2; i < 20004; ++i) {
-            arr[i] = max(arr[i] + arr[i-2], arr[i-1]);
+        for (int &num: arr) {
+            maxVal = max(num + prev1, prev2);
+            prev1 = prev2;
+            prev2 = maxVal;
         }
 
-        return arr[20003];
+        return maxVal;
     }
 };
