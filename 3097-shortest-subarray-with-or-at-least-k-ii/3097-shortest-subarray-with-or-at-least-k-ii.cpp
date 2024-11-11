@@ -1,39 +1,28 @@
 class Solution {
- public:
-  // Same as 3095. Shortest Subarray With OR at Least K I
-  int minimumSubarrayLength(vector<int>& nums, int k) {
-    constexpr int kMax = 50;
-    const int n = nums.size();
-    int ans = n + 1;
-    int ors = 0;
-    vector<int> count(kMax + 1);
+private:
+    vector<int> freq = vector<int>(32, 0);
 
-    for (int l = 0, r = 0; r < n; r++) {
-      ors = orNum(ors, nums[r], count);
-      while (ors >= k && l <= r) {
-        ans = min(ans, r - l + 1);
-        ors = undoOrNum(ors, nums[l], count);
-        ++l;
-      }
+    void count(int n) {
+        for (int i = 0; i < 32; i++) {
+            if (n & (1 << i)) freq[i]++;
+        }
     }
 
-    return (ans == n + 1) ? -1 : ans;
-  }
-
- private:
-  static constexpr int kMaxBit = 30;
-
-  int orNum(int ors, int num, vector<int>& count) {
-    for (int i = 0; i < kMaxBit; ++i)
-      if (num >> i & 1 && ++count[i] == 1)
-        ors += 1 << i;
-    return ors;
-  }
-
-  int undoOrNum(int ors, int num, vector<int>& count) {
-    for (int i = 0; i < kMaxBit; ++i)
-      if (num >> i & 1 && --count[i] == 0)
-        ors -= 1 << i;
-    return ors;
-  }
+public:
+    int minimumSubarrayLength(vector<int> &nums, int k) {
+        int sz = (int) nums.size(), total = 0, ans = INT_MAX;
+        for (int i = 0, j = 0; i < sz; ++i) {
+            total |= nums[i];
+            count(nums[i]);
+            while (total >= k and j <= i) {
+                ans = min(ans, i - j + 1);
+                for (int l = 0; l < 32; l++) {
+                    if (nums[j] & (1 << l)) freq[l]--;
+                    if (freq[l] == 0) total &= ~(1 << l);
+                }
+                j++;
+            }
+        }
+        return ans == INT_MAX ? -1 : ans;
+    }
 };
