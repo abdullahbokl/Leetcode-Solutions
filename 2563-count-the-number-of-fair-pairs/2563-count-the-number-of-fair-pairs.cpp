@@ -1,20 +1,23 @@
 class Solution {
-private:
-    long long countLess(const vector<int> &nums, int sum, int sz) {
-        long res = 0;
-        for (int i = 0, j = sz - 1; i < j; ++i) {
-            while (i < j && nums[i] + nums[j] > sum)
-                --j;
-            res += j - i;
-        }
-        return res;
-    }
-
 public:
     long long countFairPairs(vector<int> &nums, int lower, int upper) {
-        int sz = (int) nums.size();
+        int n = (int) nums.size();
         sort(nums.begin(), nums.end());
-        // what I did after sorting is: (number of pairs sum less than equal to upper - number of pairs sum less than lower)
-        return countLess(nums, upper, sz) - countLess(nums, lower - 1, sz);
+        long long ans = 0;
+        int lowerBound = n;
+        int upperBound = n - 1;
+        for (int i = 0; i < n; i++) {
+            // find the first value less than lower
+            while (lowerBound > 0 && nums[i] + nums[lowerBound - 1] >= lower) lowerBound--;
+            // find the first value less than or equal to upper
+            while (upperBound >= 0 && nums[i] + nums[upperBound] > upper) upperBound--;
+            // the range [lowerBound, upperBound] is the range of valid pairs
+            int add = upperBound - lowerBound + 1;
+            // if the current value is in the range, we need to subtract 1 to avoid counting the pair (i, i) twice
+            if (i <= upperBound && i >= lowerBound) add--;
+            ans += add;
+        }
+        // divide by 2 to avoid counting each pair twice such as (i, j) and (j, i)
+        return ans / 2;
     }
 };
