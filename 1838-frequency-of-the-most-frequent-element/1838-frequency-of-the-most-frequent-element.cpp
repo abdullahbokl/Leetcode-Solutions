@@ -7,7 +7,7 @@ public:
         for (; i < n; i++) {
             sum += nums[i];
             currentLength = i - left + 1;
-            if ((long long) currentLength * nums[i] - sum > k)  sum -= nums[left++];
+            if (currentLength * nums[i] - sum > k)  sum -= nums[left++];
         }
         
         return i - left;
