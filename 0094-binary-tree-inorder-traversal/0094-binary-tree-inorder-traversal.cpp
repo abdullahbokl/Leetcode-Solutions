@@ -1,17 +1,20 @@
 class Solution {
-private:
-    vector<int> res;
-
-    void inorder(TreeNode *root) {
-        if (root == nullptr) return;
-        inorder(root->left);
-        res.emplace_back(root->val);
-        inorder(root->right);
-    }
-
 public:
     vector<int> inorderTraversal(TreeNode *root) {
-        inorder(root);
-        return res;
+        vector<int> ans;
+        stack<TreeNode *> st;
+
+        while (!st.empty() || root != nullptr) {
+            while (root != nullptr) {
+                st.emplace(root);
+                root = root->left;
+            }
+            root = st.top();
+            st.pop();
+            ans.emplace_back(root->val);
+            root = root->right;
+        }
+
+        return ans;
     }
 };
