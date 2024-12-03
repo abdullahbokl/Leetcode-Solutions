@@ -1,15 +1,22 @@
 class Solution {
 public:
-    vector<int> resultsArray(vector<int>& nums, int k) {
-        int n = nums.size();
-        int f[n];
-        f[0] = 1;
-        for (int i = 1; i < n; ++i) {
-            f[i] = nums[i] == nums[i - 1] + 1 ? f[i - 1] + 1 : 1;
-        }
+    vector<int> resultsArray(vector<int> &nums, int k) {
+        if (k == 1) return nums;
         vector<int> ans;
-        for (int i = k - 1; i < n; ++i) {
-            ans.push_back(f[i] >= k ? nums[i] : -1);
+        int sz = static_cast<int>(nums.size());
+
+        int cnt = 1, left = 1, right = k - 1;
+
+        while (right < sz and left <= right) {
+            if (nums[left] == nums[left - 1] + 1) cnt++;
+            else cnt = 1;
+
+            if (left == right) {
+                if (cnt >= k) ans.emplace_back(nums[left]);
+                else ans.emplace_back(-1);
+                right++;
+            }
+            left++;
         }
         return ans;
     }
