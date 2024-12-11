@@ -1,16 +1,14 @@
 class Solution {
- public:
-  int maximumBeauty(vector<int>& nums, int k) {
-    int ans = 0;
+public:
+    int maximumBeauty(vector<int> &nums, int k) {
+        int l = 0, r = 0, sz = static_cast<int>(nums.size());
 
-    ranges::sort(nums);
+        sort(nums.begin(), nums.end());
 
-    for (int l = 0, r = 0; r < nums.size(); ++r) {
-      while (nums[r] - nums[l] > 2 * k)
-        ++l;
-      ans = max(ans, r - l + 1);
+        for (r = 0; r < sz; ++r) {
+            if (nums[r] - nums[l] > 2 * k) ++l;
+        }
+
+        return r - l;
     }
-
-    return ans;
-  }
 };
